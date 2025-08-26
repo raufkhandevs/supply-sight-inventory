@@ -6,6 +6,8 @@ import { KPICards } from "../components/dashboard/KPICards";
 import { StockDemandChart } from "../components/dashboard/StockDemandChart";
 import { Filters } from "../components/dashboard/Filters";
 import { ProductsTable } from "../components/dashboard/ProductsTable";
+import { ProductDetailDrawer } from "../components/dashboard/ProductDetailDrawer";
+import { Toast } from "../components/ui/toast";
 import { useProducts, useWarehouses, useKPIs } from "../hooks";
 import { calculateFillRate } from "../utils/product-status";
 import type { Product } from "../types/graphql";
@@ -23,9 +25,19 @@ export default function Home() {
   const [selectedWarehouse, setSelectedWarehouse] = React.useState("all");
   const [selectedStatus, setSelectedStatus] = React.useState("All");
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [toast, setToast] = React.useState<{
+    message: string;
+    type: "success" | "error";
+    isVisible: boolean;
+  }>({
+    message: "",
+    type: "success",
+    isVisible: false,
+  });
 
   // Fetch data using our custom hooks
-  const { products, loading: productsLoading } = useProducts({
+  const { products, loading: productsLoading, updateDemand, transferStock } = useProducts({
     search: search || undefined,
     status: selectedStatus === "All" ? undefined : selectedStatus,
     warehouse: selectedWarehouse === "all" ? undefined : selectedWarehouse,
@@ -41,7 +53,48 @@ export default function Home() {
 
   const handleProductRowClick = (product: Product) => {
     setSelectedProduct(product);
-    // TODO: Open drawer with product details
+    setIsDrawerOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setIsDrawerOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const handleUpdateDemand = async (id: string, demand: number) => {
+    try {
+      await updateDemand({ id, demand });
+      setToast({
+        message: "Demand updated successfully!",
+        type: "success",
+        isVisible: true,
+      });
+    } catch (error) {
+      console.error("Failed to update demand:", error);
+      setToast({
+        message: "Failed to update demand. Please try again.",
+        type: "error",
+        isVisible: true,
+      });
+    }
+  };
+
+  const handleTransferStock = async (id: string, from: string, to: string, qty: number) => {
+    try {
+      await transferStock({ id, from, to, qty });
+      setToast({
+        message: "Stock transferred successfully!",
+        type: "success",
+        isVisible: true,
+      });
+    } catch (error) {
+      console.error("Failed to transfer stock:", error);
+      setToast({
+        message: "Failed to transfer stock. Please try again.",
+        type: "error",
+        isVisible: true,
+      });
+    }
   };
 
   return (
@@ -75,6 +128,30 @@ export default function Home() {
           onRowClick={handleProductRowClick}
         />
       </div>
+
+      {/* Product Detail Drawer */}
+      {isDrawerOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+          onClick={handleCloseDrawer}
+        />
+      )}
+      <ProductDetailDrawer
+        product={selectedProduct}
+        warehouses={warehouses}
+        isOpen={isDrawerOpen}
+        onClose={handleCloseDrawer}
+        onUpdateDemand={handleUpdateDemand}
+        onTransferStock={handleTransferStock}
+      />
+
+      {/* Toast Notifications */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={() => setToast(prev => ({ ...prev, isVisible: false }))}
+      />
     </DashboardLayout>
   );
 }

@@ -57,21 +57,21 @@ export function StockDemandChart({ kpis, loading = false }: StockDemandChartProp
         <ResponsiveContainer width="100%" height={320}>
           <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-            <XAxis 
-              dataKey="date" 
+            <XAxis
+              dataKey="date"
               stroke="#64748b"
               fontSize={12}
               tickLine={false}
               axisLine={false}
             />
-            <YAxis 
+            <YAxis
               stroke="#64748b"
               fontSize={12}
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => value.toLocaleString()}
             />
-            <Tooltip 
+            <Tooltip
               contentStyle={{
                 backgroundColor: "white",
                 border: "1px solid #e2e8f0",

@@ -16,7 +16,7 @@ export function ProductsTable({ products, loading = false, onRowClick }: Product
   const [currentPage, setCurrentPage] = React.useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(products.length / itemsPerPage);
-  
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentProducts = products.slice(startIndex, endIndex);
@@ -24,7 +24,7 @@ export function ProductsTable({ products, loading = false, onRowClick }: Product
   const getStatusBadge = (product: Product) => {
     const status = calculateProductStatus(product);
     const variant = status.color === "green" ? "default" : status.color === "yellow" ? "secondary" : "destructive";
-    
+
     return (
       <Badge variant={variant} className="font-medium">
         {status.status}
@@ -35,9 +35,9 @@ export function ProductsTable({ products, loading = false, onRowClick }: Product
   const getRowStyle = (product: Product) => {
     const status = calculateProductStatus(product);
     if (status.status === "Critical") {
-      return "bg-red-50/80 hover:bg-red-100/80 cursor-pointer transition-colors";
+      return "bg-red-50/80 hover:bg-red-100/80 cursor-pointer transition-colors hover:shadow-sm";
     }
-    return "hover:bg-slate-50/80 cursor-pointer transition-colors";
+    return "hover:bg-slate-50/80 cursor-pointer transition-colors hover:shadow-sm";
   };
 
   if (loading) {
@@ -66,7 +66,10 @@ export function ProductsTable({ products, loading = false, onRowClick }: Product
   return (
     <div className="bg-white/60 backdrop-blur-sm border border-slate-200/60 rounded-xl p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-slate-700">Products Inventory</h3>
+        <div>
+          <h3 className="text-lg font-semibold text-slate-700">Products Inventory</h3>
+          <p className="text-sm text-slate-500">Click on any row to view details and manage inventory</p>
+        </div>
         <div className="text-sm text-slate-500">
           Showing {startIndex + 1}-{Math.min(endIndex, products.length)} of {products.length} products
         </div>
