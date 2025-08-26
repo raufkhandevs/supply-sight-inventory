@@ -93,6 +93,7 @@ export function ProductsTable({ products, loading = false, onRowClick }: Product
                 key={product.id}
                 className={getRowStyle(product)}
                 onClick={() => onRowClick(product)}
+                style={{ transition: "all 0.2s ease-in-out" }}
               >
                 <TableCell className="font-medium text-slate-900">
                   <div className="flex items-center space-x-3">

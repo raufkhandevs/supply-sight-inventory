@@ -5,7 +5,7 @@ import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
-import { X, Package, MapPin, Hash, TrendingUp, TrendingDown, ArrowRight } from "lucide-react";
+import { X, Package, MapPin, Hash, TrendingUp, TrendingDown, ArrowRight, CheckCircle } from "lucide-react";
 import type { Product, Warehouse } from "../../types/graphql";
 import { calculateProductStatus } from "../../utils/product-status";
 
@@ -26,11 +26,25 @@ export function ProductDetailDrawer({
     onUpdateDemand,
     onTransferStock,
 }: ProductDetailDrawerProps) {
+    // Handle escape key to close drawer
+    React.useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === "Escape" && isOpen) {
+                onClose();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener("keydown", handleEscape);
+            return () => document.removeEventListener("keydown", handleEscape);
+        }
+    }, [isOpen, onClose]);
     const [demand, setDemand] = React.useState("");
     const [transferQty, setTransferQty] = React.useState("");
     const [selectedWarehouse, setSelectedWarehouse] = React.useState("");
     const [isUpdating, setIsUpdating] = React.useState(false);
     const [isTransferring, setIsTransferring] = React.useState(false);
+    const [showSuccess, setShowSuccess] = React.useState(false);
 
     // Reset form when product changes
     React.useEffect(() => {
@@ -51,7 +65,8 @@ export function ProductDetailDrawer({
         setIsUpdating(true);
         try {
             await onUpdateDemand(product.id, demandNum);
-            // Form will be reset by the useEffect when product updates
+            setShowSuccess(true);
+            setTimeout(() => setShowSuccess(false), 2000);
         } catch (error) {
             console.error("Failed to update demand:", error);
         } finally {
@@ -69,7 +84,8 @@ export function ProductDetailDrawer({
         setIsTransferring(true);
         try {
             await onTransferStock(product.id, product.warehouse, selectedWarehouse, qtyNum);
-            // Form will be reset by the useEffect when product updates
+            setShowSuccess(true);
+            setTimeout(() => setShowSuccess(false), 2000);
         } catch (error) {
             console.error("Failed to transfer stock:", error);
         } finally {
@@ -155,9 +171,17 @@ export function ProductDetailDrawer({
                 </Card>
 
                 {/* Update Demand Form */}
-                <Card className="border-orange-200">
+                <Card className={`border-orange-200 transition-all duration-300 ${showSuccess ? 'ring-2 ring-green-500 ring-opacity-50' : ''}`}>
                     <CardHeader className="pb-3">
-                        <CardTitle className="text-lg text-slate-800">Update Demand</CardTitle>
+                        <CardTitle className="text-lg text-slate-800 flex items-center justify-between">
+                            Update Demand
+                            {showSuccess && (
+                                <div className="flex items-center space-x-2 text-green-600">
+                                    <CheckCircle className="w-5 h-5" />
+                                    <span className="text-sm font-medium">Updated!</span>
+                                </div>
+                            )}
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleUpdateDemand} className="space-y-4">
@@ -178,18 +202,33 @@ export function ProductDetailDrawer({
                             <Button
                                 type="submit"
                                 disabled={isUpdating || !demand || parseInt(demand) < 0}
-                                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white"
+                                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {isUpdating ? "Updating..." : "Update Demand"}
+                                {isUpdating ? (
+                                    <div className="flex items-center space-x-2">
+                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                        <span>Updating...</span>
+                                    </div>
+                                ) : (
+                                    "Update Demand"
+                                )}
                             </Button>
                         </form>
                     </CardContent>
                 </Card>
 
                 {/* Transfer Stock Form */}
-                <Card className="border-blue-200">
+                <Card className={`border-blue-200 transition-all duration-300 ${showSuccess ? 'ring-2 ring-green-500 ring-opacity-50' : ''}`}>
                     <CardHeader className="pb-3">
-                        <CardTitle className="text-lg text-slate-800">Transfer Stock</CardTitle>
+                        <CardTitle className="text-lg text-slate-800 flex items-center justify-between">
+                            Transfer Stock
+                            {showSuccess && (
+                                <div className="flex items-center space-x-2 text-green-600">
+                                    <CheckCircle className="w-5 h-5" />
+                                    <span className="text-sm font-medium">Transferred!</span>
+                                </div>
+                            )}
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleTransferStock} className="space-y-4">
@@ -233,9 +272,14 @@ export function ProductDetailDrawer({
                             <Button
                                 type="submit"
                                 disabled={isTransferring || !transferQty || !selectedWarehouse || parseInt(transferQty) <= 0 || parseInt(transferQty) > product.stock}
-                                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
+                                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {isTransferring ? "Transferring..." : (
+                                {isTransferring ? (
+                                    <div className="flex items-center space-x-2">
+                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                        <span>Transferring...</span>
+                                    </div>
+                                ) : (
                                     <div className="flex items-center space-x-2">
                                         <span>Transfer Stock</span>
                                         <ArrowRight className="w-4 h-4" />
