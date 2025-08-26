@@ -100,18 +100,18 @@ export function ProductDetailDrawer({
 
     return (
         <div
-            className={`fixed inset-y-0 right-0 w-96 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-60 ${isOpen ? "translate-x-0" : "translate-x-full"
+            className={`fixed inset-y-0 right-0 w-96 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-60 flex flex-col ${isOpen ? "translate-x-0" : "translate-x-full"
                 }`}
         >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-slate-200">
+            <div className="flex items-center justify-between p-6 border-b border-slate-200 flex-shrink-0">
                 <h2 className="text-xl font-semibold text-slate-800">Product Details</h2>
                 <Button variant="ghost" size="sm" onClick={onClose} className="hover:bg-slate-100">
                     <X className="w-5 h-5" />
                 </Button>
             </div>
 
-            <div className="p-6 space-y-6 overflow-y-auto h-full">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 pb-8 scroll-smooth drawer-scroll">
                 {/* Product Info Card */}
                 <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
                     <CardHeader className="pb-3">
@@ -290,6 +290,9 @@ export function ProductDetailDrawer({
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Scroll indicator */}
+            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-slate-200 rounded-full opacity-60"></div>
         </div>
     );
 }
