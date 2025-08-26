@@ -1,13 +1,23 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "SupplySight Dashboard" },
+    { name: "description", content: "Daily Inventory Dashboard for SupplySight" },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">
+          SupplySight Dashboard
+        </h1>
+        <p className="text-gray-600">
+          Welcome to the SupplySight Inventory Dashboard. This is where we'll build our inventory management system.
+        </p>
+      </div>
+    </div>
+  );
 }
