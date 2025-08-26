@@ -1,59 +1,36 @@
-# Apollo Server - SupplySight Mock GraphQL API
+# Apollo Server - SupplySight Mock API
 
-This is a mock GraphQL server built with Apollo Server to provide data for the SupplySight Dashboard.
+Mock GraphQL server providing data for the SupplySight Dashboard.
 
 ## 🚀 Quick Start
 
 ```bash
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
 ```
 
-## 📊 Available Endpoints
+Server runs on `http://localhost:4000/graphql`
 
-- **GraphQL**: `http://localhost:4000/graphql`
-- **Health Check**: `http://localhost:4000/health`
+## 📊 Endpoints
 
-## 🔍 GraphQL Schema
+- **GraphQL**: `/graphql`
+- **Health**: `/health`
+
+## 🔍 Schema
 
 ### Queries
 
-- `products(search, status, warehouse)` - Get filtered products
-- `warehouses` - Get all warehouses
-- `kpis(range)` - Get KPIs for specified date range (7d, 14d, 30d)
+- `products(search, status, warehouse)` - Filtered products
+- `warehouses` - All warehouses
+- `kpis(range)` - Date range KPIs (7d, 14d, 30d)
 
 ### Mutations
 
 - `updateDemand(id, demand)` - Update product demand
-- `transferStock(id, from, to, qty)` - Transfer stock between warehouses
+- `transferStock(id, from, to, qty)` - Transfer stock
 
-## 📁 Project Structure
+## 🛠️ Tech Stack
 
-```
-src/
-├── server.ts      # Main server file
-├── schema.ts      # GraphQL schema definition
-├── resolvers.ts   # Query and mutation resolvers
-├── data.ts        # Mock data and generators
-└── types.ts       # TypeScript type definitions
-```
-
-## 🛠️ Development
-
-The server runs on port 4000 by default. You can change this by setting the `PORT` environment variable.
-
-## 🔗 CORS Configuration
-
-Configured to allow requests from:
-
-- `http://localhost:5173` (Vite dev server)
-- `http://localhost:3000` (Create React App dev server)
+- Apollo Server v5
+- GraphQL + TypeScript
+- Mock data generators
