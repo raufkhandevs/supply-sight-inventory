@@ -1,6 +1,6 @@
 export const config = {
   apollo: {
-    uri: process.env.REACT_APP_GRAPHQL_URI || "http://localhost:4000/graphql",
+    uri: import.meta.env.VITE_GRAPHQL_URI || "http://localhost:4000/graphql",
   },
   app: {
     name: "SupplySight",

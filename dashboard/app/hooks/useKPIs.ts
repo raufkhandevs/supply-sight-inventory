@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { gql } from "@apollo/client";
 import type { KPI, KPIsQueryVariables } from "../types/graphql";
 
@@ -15,10 +15,10 @@ const GET_KPIS = gql`
 export const useKPIs = (range: string = "7d") => {
   const { data, loading, error, refetch } = useQuery(GET_KPIS, {
     variables: { range },
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "cache-first",
   });
 
-  const kpis = data?.kpis || [];
+  const kpis = (data as { kpis?: KPI[] })?.kpis || [];
 
   const refetchKPIs = (newRange: string) => {
     refetch({ range: newRange });

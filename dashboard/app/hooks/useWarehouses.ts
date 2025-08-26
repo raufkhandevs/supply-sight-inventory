@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { gql } from "@apollo/client";
 import type { Warehouse } from "../types/graphql";
 
@@ -18,7 +18,7 @@ export const useWarehouses = () => {
     fetchPolicy: "cache-first",
   });
 
-  const warehouses = data?.warehouses || [];
+  const warehouses = (data as { warehouses?: Warehouse[] })?.warehouses || [];
 
   return {
     warehouses,

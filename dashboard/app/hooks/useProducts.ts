@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useApolloClient } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client/react";
 import { gql } from "@apollo/client";
 import type {
   Product,
@@ -55,9 +55,8 @@ export const useProducts = (variables: ProductsQueryVariables = {}) => {
 
   const [updateDemand] = useMutation(UPDATE_DEMAND);
   const [transferStock] = useMutation(TRANSFER_STOCK);
-  const client = useApolloClient();
 
-  const products = data?.products || [];
+  const products = (data as { products?: Product[] })?.products || [];
 
   const handleUpdateDemand = async (
     input: UpdateDemandInput
@@ -81,7 +80,8 @@ export const useProducts = (variables: ProductsQueryVariables = {}) => {
         },
       });
 
-      return result.data?.updateDemand;
+      return (result.data as { updateDemand?: Product })
+        ?.updateDemand as Product;
     } catch (error) {
       console.error("Error updating demand:", error);
       throw error;
@@ -110,7 +110,8 @@ export const useProducts = (variables: ProductsQueryVariables = {}) => {
         },
       });
 
-      return result.data?.transferStock;
+      return (result.data as { transferStock?: Product })
+        ?.transferStock as Product;
     } catch (error) {
       console.error("Error transferring stock:", error);
       throw error;
