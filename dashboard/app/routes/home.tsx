@@ -129,13 +129,13 @@ export default function Home() {
         />
       </div>
 
-      {/* Product Detail Drawer */}
-      {isDrawerOpen && (
-        <div
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
-          onClick={handleCloseDrawer}
-        />
-      )}
+                        {/* Product Detail Drawer */}
+                  {isDrawerOpen && (
+                    <div 
+                      className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50"
+                      onClick={handleCloseDrawer}
+                    />
+                  )}
       <ProductDetailDrawer
         product={selectedProduct}
         warehouses={warehouses}
