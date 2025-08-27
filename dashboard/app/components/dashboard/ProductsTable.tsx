@@ -23,10 +23,22 @@ export function ProductsTable({ products, loading = false, onRowClick }: Product
 
   const getStatusBadge = (product: Product) => {
     const status = calculateProductStatus(product);
-    const variant = status.color === "green" ? "default" : status.color === "yellow" ? "secondary" : "destructive";
+    
+    const getBadgeStyle = () => {
+      switch (status.status) {
+        case "Healthy":
+          return "bg-green-100 text-green-800 border-green-200 hover:bg-green-200";
+        case "Low":
+          return "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200";
+        case "Critical":
+          return "bg-red-100 text-red-800 border-red-200 hover:bg-red-200";
+        default:
+          return "bg-slate-100 text-slate-800 border-slate-200";
+      }
+    };
 
     return (
-      <Badge variant={variant} className="font-medium">
+      <Badge variant="outline" className={`font-medium ${getBadgeStyle()}`}>
         {status.status}
       </Badge>
     );

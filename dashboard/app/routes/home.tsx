@@ -79,6 +79,11 @@ export default function Home() {
     }
   };
 
+  const handleProductUpdate = (updatedProduct: Product) => {
+    // Update the selected product in the drawer
+    setSelectedProduct(updatedProduct);
+  };
+
   const handleTransferStock = async (id: string, from: string, to: string, qty: number) => {
     try {
       await transferStock({ id, from, to, qty });
@@ -129,13 +134,13 @@ export default function Home() {
         />
       </div>
 
-                        {/* Product Detail Drawer */}
-                  {isDrawerOpen && (
-                    <div 
-                      className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50"
-                      onClick={handleCloseDrawer}
-                    />
-                  )}
+      {/* Product Detail Drawer */}
+      {isDrawerOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50"
+          onClick={handleCloseDrawer}
+        />
+      )}
       <ProductDetailDrawer
         product={selectedProduct}
         warehouses={warehouses}
@@ -143,6 +148,7 @@ export default function Home() {
         onClose={handleCloseDrawer}
         onUpdateDemand={handleUpdateDemand}
         onTransferStock={handleTransferStock}
+        onProductUpdate={handleProductUpdate}
       />
 
       {/* Toast Notifications */}

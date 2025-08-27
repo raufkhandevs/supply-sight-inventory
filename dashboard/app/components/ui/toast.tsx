@@ -23,7 +23,7 @@ export function Toast({ message, type, isVisible, onClose }: ToastProps) {
     if (!isVisible) return null;
 
     return (
-        <div className="fixed top-4 right-4 z-50 transform transition-all duration-300 ease-out">
+        <div className="fixed top-4 right-4 z-[80] transform transition-all duration-300 ease-out">
             <div
                 className={cn(
                     "flex items-center space-x-3 p-4 rounded-lg shadow-lg border min-w-[300px] transform transition-all duration-300",

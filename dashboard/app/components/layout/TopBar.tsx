@@ -13,7 +13,7 @@ export function TopBar({ selectedRange, onRangeChange }: TopBarProps) {
   ];
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200/60 sticky top-0 z-40">
+    <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200/60 sticky top-0 z-40 rounded-xl">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -25,7 +25,6 @@ export function TopBar({ selectedRange, onRangeChange }: TopBarProps) {
               <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
                 SupplySight
               </h1>
-              <p className="text-sm text-slate-500">Inventory Dashboard</p>
             </div>
           </div>
 
@@ -37,11 +36,10 @@ export function TopBar({ selectedRange, onRangeChange }: TopBarProps) {
                 variant={selectedRange === range.value ? "default" : "ghost"}
                 size="sm"
                 onClick={() => onRangeChange(range.value)}
-                className={`${
-                  selectedRange === range.value
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg"
-                    : "text-slate-600 hover:text-slate-800 hover:bg-white/60"
-                } transition-all duration-200`}
+                className={`${selectedRange === range.value
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg"
+                  : "text-slate-600 hover:text-slate-800 hover:bg-white/60"
+                  } transition-all duration-200`}
               >
                 {range.label}
               </Button>

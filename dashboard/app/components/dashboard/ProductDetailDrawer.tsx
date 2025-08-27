@@ -16,6 +16,7 @@ interface ProductDetailDrawerProps {
     onClose: () => void;
     onUpdateDemand: (id: string, demand: number) => Promise<void>;
     onTransferStock: (id: string, from: string, to: string, qty: number) => Promise<void>;
+    onProductUpdate?: (updatedProduct: Product) => void;
 }
 
 export function ProductDetailDrawer({
@@ -25,6 +26,7 @@ export function ProductDetailDrawer({
     onClose,
     onUpdateDemand,
     onTransferStock,
+    onProductUpdate,
 }: ProductDetailDrawerProps) {
     // Handle escape key to close drawer
     React.useEffect(() => {
@@ -67,6 +69,15 @@ export function ProductDetailDrawer({
             await onUpdateDemand(product.id, demandNum);
             setShowSuccess(true);
             setTimeout(() => setShowSuccess(false), 2000);
+
+            // Update local product state to reflect the change
+            if (product && onProductUpdate) {
+                const updatedProduct = { ...product, demand: demandNum };
+                onProductUpdate(updatedProduct);
+            }
+
+            // Reset form
+            setDemand(demandNum.toString());
         } catch (error) {
             console.error("Failed to update demand:", error);
         } finally {
@@ -86,6 +97,16 @@ export function ProductDetailDrawer({
             await onTransferStock(product.id, product.warehouse, selectedWarehouse, qtyNum);
             setShowSuccess(true);
             setTimeout(() => setShowSuccess(false), 2000);
+
+            // Update local product state to reflect the change
+            if (product && onProductUpdate) {
+                const updatedProduct = { ...product, stock: product.stock - qtyNum };
+                onProductUpdate(updatedProduct);
+            }
+
+            // Reset form
+            setTransferQty("");
+            setSelectedWarehouse("");
         } catch (error) {
             console.error("Failed to transfer stock:", error);
         } finally {
@@ -161,8 +182,13 @@ export function ProductDetailDrawer({
                         {/* Status */}
                         <div className="flex justify-center">
                             <Badge
-                                variant={status.color === "green" ? "default" : status.color === "yellow" ? "secondary" : "destructive"}
-                                className="text-sm font-medium px-4 py-2"
+                                variant="outline"
+                                className={`text-sm font-medium px-4 py-2 ${status.status === "Healthy"
+                                    ? "bg-green-100 text-green-800 border-green-200"
+                                    : status.status === "Low"
+                                        ? "bg-yellow-100 text-yellow-800 border-yellow-200"
+                                        : "bg-red-100 text-red-800 border-red-200"
+                                    }`}
                             >
                                 {status.status}
                             </Badge>
@@ -252,19 +278,28 @@ export function ProductDetailDrawer({
                                 <Label htmlFor="warehouse" className="text-sm font-medium text-slate-700">
                                     Destination Warehouse
                                 </Label>
+                                <div className="text-xs text-slate-500 mb-2">
+                                    Available warehouses: {availableWarehouses.length} (excluding current: {product.warehouse})
+                                </div>
                                 <Select value={selectedWarehouse} onValueChange={setSelectedWarehouse}>
                                     <SelectTrigger className="border-slate-200 focus:border-blue-500 focus:ring-blue-500">
                                         <SelectValue placeholder="Select warehouse" />
                                     </SelectTrigger>
-                                    <SelectContent>
-                                        {availableWarehouses.map((warehouse) => (
-                                            <SelectItem key={warehouse.code} value={warehouse.code}>
-                                                <div className="flex items-center space-x-2">
-                                                    <span>{warehouse.name}</span>
-                                                    <span className="text-slate-500">({warehouse.city})</span>
-                                                </div>
+                                    <SelectContent className="z-[70]">
+                                        {availableWarehouses.length > 0 ? (
+                                            availableWarehouses.map((warehouse) => (
+                                                <SelectItem key={warehouse.code} value={warehouse.code}>
+                                                    <div className="flex items-center space-x-2">
+                                                        <span>{warehouse.name}</span>
+                                                        <span className="text-slate-500">({warehouse.city})</span>
+                                                    </div>
+                                                </SelectItem>
+                                            ))
+                                        ) : (
+                                            <SelectItem value="" disabled>
+                                                No warehouses available
                                             </SelectItem>
-                                        ))}
+                                        )}
                                     </SelectContent>
                                 </Select>
                             </div>
