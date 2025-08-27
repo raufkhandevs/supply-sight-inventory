@@ -39,6 +39,17 @@ Professional inventory management platform with real-time dashboard and GraphQL 
 - **Backend**: Apollo Server v5 + GraphQL + TypeScript
 - **UI Components**: shadcn/ui library
 
+## 📸 Sample Images
+
+![Dashboard Overview](./sample/1.png)
+_Figure 1: Main dashboard with KPI cards, charts, and product table_
+
+![Product Management](./sample/2.png)
+_Figure 2: Product detail drawer with update demand and transfer stock forms_
+
+![Interactive Features](./sample/3.png)
+_Figure 3: Dashboard interactions and filtering capabilities_
+
 ---
 
 **📖 For detailed setup and development info, check the README files in each folder above.**
